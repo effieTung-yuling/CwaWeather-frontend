@@ -539,6 +539,7 @@
 
         function detectLocation() {
             if (!navigator.geolocation) {
+                console.log("Geolocation 不支援，使用高雄");
                 fetchWeather("kaohsiung");
                 return;
             }
@@ -546,20 +547,49 @@
             navigator.geolocation.getCurrentPosition(async (pos) => {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
+                console.log("取得座標:", lat, lon);
 
-                const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-                const geoData = await geoRes.json();
+                try {
+                    const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+                    const geoData = await geoRes.json();
+                    console.log("OpenStreetMap 回傳:", geoData.address);
 
-                const county = geoData.address.county || geoData.address.city;
-                const citySlug = cityMap[county] || "kaohsiung";
+                    let county = geoData.address.county || geoData.address.city || "";
 
-                const citySelect = document.getElementById("citySelect");
-                citySelect.value = citySlug;
-                fetchWeather(citySlug);
-            }, () => {
+                    // 容錯 fallback 名稱
+                    const fallbackMap = {
+                        "Taipei": "臺北市",
+                        "New Taipei": "新北市",
+                        "Taoyuan": "桃園市",
+                        "Taichung": "臺中市",
+                        "Tainan": "臺南市",
+                        "Kaohsiung": "高雄市",
+                        "Hsinchu County": "新竹縣",
+                        "Hsinchu City": "新竹市",
+                        "Chiayi County": "嘉義縣",
+                        "Chiayi City": "嘉義市"
+                    };
+                    if (!cityMap[county]) {
+                        county = fallbackMap[county] || "高雄市";
+                    }
+
+                    const citySlug = cityMap[county] || "kaohsiung";
+                    console.log("對應城市:", county, citySlug);
+
+                    const citySelect = document.getElementById("citySelect");
+                    citySelect.value = citySlug;
+                    fetchWeather(citySlug);
+                } catch (err) {
+                    console.log("地址解析失敗:", err);
+                    fetchWeather("kaohsiung");
+                }
+            }, (err) => {
+                console.log("取得位置失敗:", err);
                 fetchWeather("kaohsiung");
             });
         }
+
+
 
         function getWeatherIcon(weather) {
             if (!weather) return "🌤️";
