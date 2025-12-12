@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>森森天氣</title>
-    <link rel="icon" type="image/png" href="./icon-v2.png">
-    <link rel="apple-touch-icon" href="./icon-v2.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon-v2.png">
+    <title>全台灣天氣APP</title>
+    <link rel="icon" type="image/png" href="./weather_logo.avif">
+    <link rel="apple-touch-icon" href="./weather_logo.avif">
+    <link rel="apple-touch-icon" sizes="180x180" href="./weather_logo.avif">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap"
@@ -43,23 +43,33 @@
         }
 
         /* Loading 畫面 */
+
         .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--ac-green);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 999;
+            transition: background 1s ease;
+            /* 背景漸變 */
         }
 
+
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .status-bar {
@@ -146,29 +156,287 @@
             margin: 15px 0;
         }
 
-        .hero-icon { font-size: 5rem; filter: drop-shadow(0 4px 0 rgba(0,0,0,0.1)); animation: bounce 3s infinite; }
-        .hero-temp { font-size: 4.5rem; font-weight: 900; color: var(--ac-brown); line-height: 1; }
-        .hero-desc { font-size: 1.5rem; color: #8A7B70; margin-bottom: 20px; font-weight: bold; }
+        .hero-icon {
+            font-size: 5rem;
+            filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.1));
+            animation: bounce 3s infinite;
+        }
 
-        .advice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; padding-top: 20px; border-top: 2px dashed #E0D8C0; }
-        .advice-item { display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 20px; }
-        .advice-icon { font-size: 2rem; margin-bottom: 5px; }
-        .advice-text { font-size: 1.4rem; font-weight: 900; color: var(--ac-brown); margin: 5px 0; line-height: 1.2; }
+        .hero-temp {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: var(--ac-brown);
+            line-height: 1;
+        }
 
-        .section-title { font-size: 1.2rem; color: white; margin-bottom: 15px; margin-left: 10px; font-weight: 900; text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
-        .scroll-container { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; }
-        .scroll-container::-webkit-scrollbar { display: none; }
-        .mini-card { min-width: 140px; background: rgba(255,255,255,0.85); border-radius: 25px; padding: 20px 15px; text-align: center; border: 3px solid white; flex-shrink: 0; }
-        .mini-time { background: var(--ac-green); color: white; padding: 3px 10px; border-radius: 10px; font-size: 0.8rem; display: inline-block; margin-bottom: 10px; font-weight: bold; }
-        .mini-icon { font-size: 2.5rem; margin: 5px 0; }
-        .mini-temp { font-size: 1.2rem; font-weight: 800; color: var(--ac-dark); }
+        .hero-desc {
+            font-size: 1.5rem;
+            color: #8A7B70;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .advice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #E0D8C0;
+        }
+
+        .advice-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 20px;
+        }
+
+        .advice-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .advice-text {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--ac-brown);
+            margin: 5px 0;
+            line-height: 1.2;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 15px;
+            margin-left: 10px;
+            font-weight: 900;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .mini-card {
+            min-width: 140px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 25px;
+            padding: 20px 15px;
+            text-align: center;
+            border: 3px solid white;
+            flex-shrink: 0;
+        }
+
+        .mini-time {
+            background: var(--ac-green);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .mini-icon {
+            font-size: 2.5rem;
+            margin: 5px 0;
+        }
+
+        .mini-temp {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--ac-dark);
+        }
+
+        /* 基本 body 設定 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            transition: background 1s ease;
+            overflow-x: hidden;
+        }
+
+        /* 天氣漸層主題 */
+        body.sunny {
+            background: linear-gradient(to bottom, #87CEFA, #fff);
+            /* 晴天 */
+        }
+
+        body.cloudy {
+            background: linear-gradient(to bottom, #B0C4DE, #E0E5EC);
+            /* 多雲 */
+        }
+
+        body.rainy {
+            background: linear-gradient(to bottom, #4B79A1, #283E51);
+            /* 下雨 */
+        }
+
+        body.night {
+            background: linear-gradient(to bottom, #001f3f, #000);
+            /* 晚上深藍 */
+            position: relative;
+        }
+
+        /* 星星效果 */
+        body.night::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.2;
+                transform: scale(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 0.3;
+                transform: scale(0.7);
+            }
+        }
+
+        /* 毛玻璃卡片 */
+        .glass-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* 漸層按鈕 */
+        .btn-gradient {
+            background: linear-gradient(135deg, #6dd5fa, #2980b9);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-gradient:hover {
+            transform: scale(1.05);
+        }
+
+        .location-pill {
+            position: relative;
+        }
+
+        .location-pill select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 25px;
+            /* 留空間給箭頭 */
+            background: white;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* 加箭頭圖示 */
+        .location-pill::after {
+            content: "▼";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: black;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* 聖誕樹和雪花 */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            background: linear-gradient(to bottom, #004e92, #000);
+            /* 冬夜背景 */
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1rem;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.5;
+            }
+        }
+
+        #christmasTree {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
     </style>
 </head>
 
 <body>
-    <div id="loading" class="loading-screen">
-        <div style="font-size: 4rem; animation: bounce 2s infinite;">☁️</div>
-        <p style="color: white; font-weight: bold; margin-top: 20px;">正在觀測雲的流動...</p>
+    <div id="loading">
+        <div id="christmasTree">🎄</div>
+        <p style="color: white; font-weight: bold; margin-top: 10px;">正在觀測雲的流動...</p>
     </div>
 
     <div class="status-bar">
@@ -184,6 +452,8 @@
         <h3 class="section-title">稍後預報</h3>
         <div class="scroll-container" id="futureForecasts"></div>
     </div>
+
+    <p style="color: #fff;text-align: center;margin: 5px;">本網站僅供個人作品使用，不提供商業用途</p>
 
     <script>
         const cityMap = {
@@ -231,6 +501,21 @@
 
             detectLocation();
         });
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            snowflake.textContent = '❄️';
+            document.getElementById('loading').appendChild(snowflake);
+
+            // 移除已掉落的雪花
+            setTimeout(() => snowflake.remove(), 10000);
+        }
+
+        // 每 200ms 生成一片雪花
+        setInterval(createSnowflake, 200);
 
         async function fetchWeather(citySlug) {
             try {
@@ -305,38 +590,104 @@
             if (hour >= 18 && hour < 23) return "晚上";
             return "深夜";
         }
+        // 背景切換
+        function updateBackground(weather, hour) {
+            const body = document.body;
+            body.className = ""; // 先清掉原本 class
+
+            let isNight = hour < 6 || hour >= 18;
+
+            if (isNight) {
+                body.classList.add("night");
+                generateStars();
+            } else {
+                removeStars();
+                if (weather.includes("晴")) body.classList.add("sunny");
+                else if (weather.includes("雲")) body.classList.add("cloudy");
+                else if (weather.includes("雨") || weather.includes("雷")) body.classList.add("rainy");
+                else body.classList.add("sunny"); // 預設
+            }
+        }
+
+        // 產生星星
+        let starElements = [];
+        function generateStars(count = 50) {
+            removeStars();
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                star.style.top = Math.random() * 100 + "%";
+                star.style.left = Math.random() * 100 + "%";
+                star.style.width = Math.random() * 2 + 1 + "px";
+                star.style.height = star.style.width;
+                star.style.animationDuration = (Math.random() * 3 + 1) + "s";
+                document.body.appendChild(star);
+                starElements.push(star);
+            }
+        }
+
+        function removeStars() {
+            starElements.forEach(s => s.remove());
+            starElements = [];
+        }
+        function setLoadingBackground(weather, hour) {
+            const loading = document.getElementById('loading');
+            let isNight = hour < 6 || hour >= 18;
+
+            if (isNight) {
+                loading.style.background = 'linear-gradient(to bottom, #001f3f, #000)';
+            } else {
+                if (weather.includes("晴")) loading.style.background = 'linear-gradient(to bottom, #87CEFA, #7DE1A9)';
+                else if (weather.includes("雲")) loading.style.background = 'linear-gradient(to bottom, #B0C4DE, #E0E5EC)';
+                else if (weather.includes("雨") || weather.includes("雷")) loading.style.background = 'linear-gradient(to bottom, #4B79A1, #283E51)';
+                else loading.style.background = 'linear-gradient(to bottom, #87CEFA, #7DE1A9)'; // 預設
+            }
+        }
 
         function renderWeather(data) {
             const forecasts = data.forecasts;
             const current = forecasts[0];
-            const others = forecasts.slice(1);
 
+            const hour = new Date(current.startTime).getHours();
+            updateBackground(current.weather, hour);
+
+            // ★ 新增：設定 loading 背景與主畫面一致
+            setLoadingBackground(current.weather, hour);
+
+            const others = forecasts.slice(1);
             const advice = getAdvice(current.rain, current.maxTemp);
             const period = getTimePeriod(current.startTime);
             const avgTemp = Math.round((parseInt(current.maxTemp) + parseInt(current.minTemp)) / 2);
 
             document.getElementById('heroCard').innerHTML = `
-                <div class="hero-card">
-                    <div class="hero-period">${period}</div>
-                    <div class="hero-temp-container">
-                        <div class="hero-icon">${getWeatherIcon(current.weather)}</div>
-                        <div class="hero-temp">${avgTemp}°</div>
-                    </div>
-                    <div class="hero-desc">${current.weather}</div>
-                    <div class="advice-grid">
-                        <div class="advice-item">
-                            <div class="advice-icon">${advice.rainIcon}</div>
-                            <div class="advice-text">${advice.rainText}</div>
-                            <div style="font-size:0.7rem; color:#999">降雨率 ${current.rain}</div>
-                        </div>
-                        <div class="advice-item">
-                            <div class="advice-icon">${advice.clothIcon}</div>
-                            <div class="advice-text">${advice.clothText}</div>
-                            <div style="font-size:0.7rem; color:#999">最高溫 ${current.maxTemp}°</div>
-                        </div>
-                    </div>
+        <div class="hero-card">
+            <div class="hero-period">${period}</div>
+            <div class="hero-temp-container">
+                <div class="hero-icon">${getWeatherIcon(current.weather)}</div>
+                <div class="hero-temp">${avgTemp}°</div>
+            </div>
+            <div class="hero-desc">${current.weather}</div>
+            <div class="advice-grid">
+                <div class="advice-item">
+                    <div class="advice-icon">${advice.rainIcon}</div>
+                    <div class="advice-text">${advice.rainText}</div>
+                    <div style="font-size:0.7rem; color:#999">降雨率 ${current.rain}</div>
                 </div>
-            `;
+                <div class="advice-item">
+                    <div class="advice-icon">${advice.clothIcon}</div>
+                    <div class="advice-text">${advice.clothText}</div>
+                    <div style="font-size:0.7rem; color:#999">最高溫 ${current.maxTemp}°</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+            // 顯示主畫面
+            // 顯示主畫面
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            }, 4000); // 4 秒
 
             const scrollContainer = document.getElementById('futureForecasts');
             scrollContainer.innerHTML = '';
@@ -367,4 +718,5 @@
         }
     </script>
 </body>
+
 </html>
