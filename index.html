@@ -539,7 +539,7 @@
 
         function detectLocation() {
             if (!navigator.geolocation) {
-                console.log("Geolocation 不支援，使用高雄");
+                // console.log("Geolocation 不支援，使用高雄");
                 fetchWeather("kaohsiung");
                 return;
             }
@@ -547,12 +547,12 @@
             navigator.geolocation.getCurrentPosition(async (pos) => {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
-                console.log("取得座標:", lat, lon);
+                // console.error("取得座標:", lat, lon);
 
                 try {
                     const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
                     const geoData = await geoRes.json();
-                    console.log("OpenStreetMap 回傳:", geoData.address);
+                    // console.error("OpenStreetMap 回傳:", geoData.address);
 
                     let county = geoData.address.county || geoData.address.city || "";
 
@@ -574,17 +574,17 @@
                     }
 
                     const citySlug = cityMap[county] || "kaohsiung";
-                    console.log("對應城市:", county, citySlug);
+                    // console.error("對應城市:", county, citySlug);
 
                     const citySelect = document.getElementById("citySelect");
                     citySelect.value = citySlug;
                     fetchWeather(citySlug);
                 } catch (err) {
-                    console.log("地址解析失敗:", err);
+                    console.error("地址解析失敗:", err);
                     fetchWeather("kaohsiung");
                 }
             }, (err) => {
-                console.log("取得位置失敗:", err);
+                console.error("取得位置失敗:", err);
                 fetchWeather("kaohsiung");
             });
         }
