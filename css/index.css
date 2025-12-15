@@ -249,7 +249,17 @@ body {
   font-weight: 800;
   color: var(--ac-dark);
 }
-
+@media (max-width: 475px) {
+  .mini-temp  {
+    font-size:16px;
+  }
+  .scroll-container{
+    gap:10px;
+  }
+  .mini-card{
+    padding:18px 15px;
+  }
+}
 /* 基本 body 設定 */
 body {
   margin: 0;
