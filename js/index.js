@@ -183,7 +183,39 @@ function getAdvice(rainProb, maxTemp) {
 
   return { rainIcon, rainText, clothIcon, clothText };
 }
+// 傳入三個參數：天氣描述、溫度、降雨機率
+function getFoodAdvice(weather, temp, rainProb) {
+  const t = parseInt(temp);
+  const r = parseInt(rainProb);
+  const hasRainDesc = weather.includes("雨") || weather.includes("雷");
 
+  // 1. 先處理「冷」的優先級 (冷的時候，不管有沒有雨，火鍋最重要)
+  if (t <= 20) {
+    return {
+      icon: "🍲",
+      text: `外面只有 ${t} 度！這種天氣不吃火鍋或拉麵真的對不起自己。`,
+    };
+  }
+
+  // 2. 處理「雨」的邏輯 (只有當降雨率夠高，才建議躲在家)
+  if (hasRainDesc && r >= 40) {
+    return {
+      icon: "🍗",
+      text: `降雨率 ${r}%，外面濕答答，點份炸雞配電影最爽！`,
+    };
+  }
+
+  // 3. 處理「熱」的邏輯
+  if (t >= 28) {
+    return { icon: "🍦", text: "氣溫有點高耶，要不要來支聖誕限定冰淇淋？" };
+  }
+
+  // 4. 預設（舒服的天氣）
+  const festiveFood = ["烤雞", "聖誕熱紅酒", "義大利麵", "暖心拿鐵"];
+  const randomFood =
+    festiveFood[Math.floor(Math.random() * festiveFood.length)];
+  return { icon: "🎁", text: `氣候宜人，今天適合犒賞自己吃個${randomFood}！` };
+}
 function getTimePeriod(startTime) {
   const hour = new Date(startTime).getHours();
   if (hour >= 5 && hour < 11) return "早晨";
@@ -263,6 +295,7 @@ function renderWeather(data) {
 
   const others = forecasts.slice(1);
   const advice = getAdvice(current.rain, current.maxTemp);
+  const food = getFoodAdvice(current.weather, current.maxTemp, current.rain);
   const period = getTimePeriod(current.startTime);
   const avgTemp = Math.round(
     (parseInt(current.maxTemp) + parseInt(current.minTemp)) / 2
@@ -290,6 +323,13 @@ function renderWeather(data) {
                     <div style="font-size:0.7rem; color:#999">最高溫 ${
                       current.maxTemp
                     }°</div>
+                </div>
+            </div>
+            <div class="food-advice-box">
+                <div class="food-icon">${food.icon}</div>
+                <div class="food-text">
+                    <span style="font-size:0.8rem; color:#b08d57; font-weight:bold;">聖誕美食建議：</span><br>
+                    ${food.text}
                 </div>
             </div>
         </div>
