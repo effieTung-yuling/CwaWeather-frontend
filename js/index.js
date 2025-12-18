@@ -1,3 +1,21 @@
+function getCurrentTheme() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // 月份從 0 開始，所以要 +1
+  const date = now.getDate();
+
+  // 1. 2026/01/01 ~ 2026/03/03：新年模式
+  if (year === 2026 && (month < 3 || (month === 3 && date <= 3))) {
+    return "NEW_YEAR";
+  }
+  // 2. 2025/12/31 以前：聖誕模式
+  if (year <= 2025) {
+    return "CHRISTMAS";
+  }
+  // 3. 其他時間：日常四季風
+  return "DAILY";
+}
+
 const cityMap = {
   高雄市: "kaohsiung",
   宜蘭縣: "yilan",
@@ -30,7 +48,7 @@ const slugToName = Object.fromEntries(
 document.addEventListener("DOMContentLoaded", () => {
   const citySelect = document.getElementById("citySelect");
 
-  // 建立選項
+  // 1. 建立選項 (原本的 Code)
   Object.keys(cityMap).forEach((name) => {
     const option = document.createElement("option");
     option.value = cityMap[name];
@@ -38,28 +56,53 @@ document.addEventListener("DOMContentLoaded", () => {
     citySelect.appendChild(option);
   });
 
-  // 選單改變
+  // 2. 選單改變 (原本的 Code)
   citySelect.addEventListener("change", (e) => {
     fetchWeather(e.target.value);
   });
 
+  // ⭐ 新增：在這裡執行主題樣式套用，確保 christmasTree 已經在網頁上了
+  applyThemeStyles();
+
+  // ⭐ 新增：在這裡啟動雪花/紅包生成
+  setInterval(createSnowflake, 200);
+
   detectLocation();
 });
+
+
 function createSnowflake() {
+  const theme = getCurrentTheme();
+  // 先抓容器
+  const container = document.getElementById("loading");
+  
+  // ⭐ 除錯防護：如果找不到容器就報錯，這樣你打開 F12 就知道問題在哪
+  if (!container) {
+    console.error("找不到 ID 為 loading 的容器！請檢查 HTML。");
+    return;
+  }
+
   const snowflake = document.createElement("div");
-  snowflake.className = "snowflake";
-  snowflake.style.left = Math.random() * window.innerWidth + "px";
-  snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+  snowflake.className = "snowflake"; 
+  
+  snowflake.style.left = Math.random() * 100 + "vw";
+  snowflake.style.fontSize = Math.random() * 10 + 20 + "px"; 
   snowflake.style.animationDuration = Math.random() * 5 + 5 + "s";
-  snowflake.textContent = "❄️";
-  document.getElementById("loading").appendChild(snowflake);
 
-  // 移除已掉落的雪花
-  setTimeout(() => snowflake.remove(), 10000);
+  if (theme === "NEW_YEAR") {
+    const icons = ["🧨", "✨", "🏮", "🧧", "💥"];
+    snowflake.textContent = icons[Math.floor(Math.random() * icons.length)];
+    snowflake.classList.add("sparkle-icon");
+  } else if (theme === "CHRISTMAS") {
+    snowflake.textContent = "❄️";
+  } else {
+    snowflake.textContent = "🍃";
+  }
+
+  container.appendChild(snowflake);
+
+  setTimeout(() => snowflake.remove(), 6000);
 }
-
-// 每 200ms 生成一片雪花
-setInterval(createSnowflake, 200);
 
 async function fetchWeather(citySlug) {
   try {
@@ -70,8 +113,8 @@ async function fetchWeather(citySlug) {
     if (data.success) {
       renderWeather(data.data);
 
-      document.getElementById("loading").style.display = "none";
-      document.getElementById("mainContent").style.display = "block";
+      // document.getElementById("loading").style.display = "none";
+      // document.getElementById("mainContent").style.display = "block";
     } else {
       throw new Error("API Error");
     }
@@ -283,10 +326,47 @@ function setLoadingBackground(weather, hour) {
   }
 }
 
+function applyThemeStyles() {
+  const theme = getCurrentTheme();
+  const root = document.documentElement;
+  const treeEl = document.getElementById("christmasTree");
+  const newYearEl = document.getElementById("newYear");
+
+  if (theme === "NEW_YEAR") {
+    // 新年模式：紅金配色
+    root.style.setProperty('--ac-green', '#cd5f5fff'); 
+    root.style.setProperty('--ac-bg-pattern', '#8b0000');
+    if (newYearEl) newYearEl.style.display = "block";
+    if (treeEl) treeEl.style.display = "none";
+    
+  } else if (theme === "CHRISTMAS") {
+    // 聖誕模式：森林綠
+    root.style.setProperty('--ac-green', '#2d5a27');
+    if (treeEl) {
+      treeEl.style.display = "block";
+      treeEl.textContent = "🎄";
+    }
+    if (newYearEl) newYearEl.style.display = "none";
+
+  } else {
+    // ⭐ DAILY (日常模式)：顯示綠色系與大樹
+    root.style.setProperty('--ac-green', '#7de1a9');
+    root.style.setProperty('--ac-bg-pattern', '#8fd8af');
+    
+    if (treeEl) {
+      treeEl.style.display = "block";
+      treeEl.textContent = "🌳"; // 日常模式顯示一般大樹
+    }
+    if (newYearEl) newYearEl.style.display = "none";
+  }
+}
+
 function renderWeather(data) {
   const forecasts = data.forecasts;
   const current = forecasts[0];
-
+const theme = getCurrentTheme();
+const title = theme === "NEW_YEAR" ? "新春開運美食：" : 
+              theme === "CHRISTMAS" ? "聖誕美食建議：" : "今日美食推薦：";
   const hour = new Date(current.startTime).getHours();
   updateBackground(current.weather, hour);
 
@@ -328,7 +408,7 @@ function renderWeather(data) {
             <div class="food-advice-box">
                 <div class="food-icon">${food.icon}</div>
                 <div class="food-text">
-                    <span style="font-size:0.8rem; color:#b08d57; font-weight:bold;">聖誕美食建議：</span><br>
+                    <span style="font-size:0.8rem; color:#b08d57; font-weight:bold;">${title}：</span><br>
                     ${food.text}
                 </div>
             </div>
@@ -336,11 +416,10 @@ function renderWeather(data) {
     `;
 
   // 顯示主畫面
-  // 顯示主畫面
   setTimeout(() => {
     document.getElementById("loading").style.display = "none";
     document.getElementById("mainContent").style.display = "block";
-  }, 3000); // 4 秒
+  }, 4000); // 4 秒
 
   const scrollContainer = document.getElementById("futureForecasts");
   scrollContainer.innerHTML = "";

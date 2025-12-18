@@ -417,21 +417,35 @@ body.night::before {
   font-weight: bold;
 }
 
-/* 聖誕樹和雪花 */
-#loading {
+/* 讓聖誕樹、新年燈籠、日常大樹都有同樣的大尺寸與跳動動畫 */
+#christmasTree, #newYear {
+  font-size: 5rem;             /* 確保夠大 */
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+  display: none;               /* 預設隱藏，由 JS 控制顯示哪一個 */
+  line-height: 1;              /* 防止行高影響置中 */
+}
+
+/* 確保 Loading 容器內的文字垂直置中 */
+.loading-screen {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  background: linear-gradient(to bottom, #004e92, #000);
-  /* 冬夜背景 */
-  overflow: hidden;
+  flex-direction: column;      /* 垂直排列 */
+  justify-content: center;     /* 垂直置中 */
+  align-items: center;         /* 水平置中 */
+  z-index: 2000;
+  transition: background 1s ease;
+  color: white;                /* 讓文字（正在觀測...）變白色 */
+}
+
+.loading-screen p {
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
 .snowflake {
